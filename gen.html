@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Fill Screen Vertically with Randomly Colored Horizontal Lines (Random
+      Start and Stop)
+    </title>
+    <style>
+      /* Style for the animated horizontal line */
+      .horizontal-line {
+        position: absolute;
+        width: 0;
+        height: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Container to hold the animated lines -->
+    <div id="line-container"></div>
+
+    <!-- Add the animation using JavaScript -->
+    <script>
+      // Function to generate a random color
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // Function to fill the screen vertically with randomly colored lines (Random Start and Stop)
+      function fillScreenVertically(speed) {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const numLines = Math.ceil(screenHeight / 2); // Each line is 2px in height
+
+        let currentLineY = 0;
+
+        function createLine() {
+          if (currentLineY >= screenHeight) {
+            return;
+          }
+
+          const line = document.createElement("div");
+          line.classList.add("horizontal-line");
+          const lineStartX = Math.random() * screenWidth; // Random start X position
+          const lineEndX = Math.random() * screenWidth; // Random end X position
+          line.style.top = currentLineY + "px"; // Set the Y position
+          line.style.left = Math.min(lineStartX, lineEndX) + "px"; // Set the starting X position
+          line.style.backgroundColor = getRandomColor(); // Set a random background color
+          document.getElementById("line-container").appendChild(line);
+
+          let lineWidth = 0;
+          const animationInterval = setInterval(() => {
+            if (lineWidth >= Math.abs(lineEndX - lineStartX)) {
+              clearInterval(animationInterval);
+              currentLineY += 5; // Move to the next line
+              createLine(); // Create the next line
+            } else {
+              lineWidth += 200; // Increase line width faster (adjust this value)
+              line.style.width = lineWidth + "px";
+            }
+          }, speed);
+        }
+
+        // Start the animation
+        createLine();
+      }
+
+      // Call the function to fill the screen vertically with randomly colored lines (Random Start and Stop)
+      fillScreenVertically(1); // Adjust the speed as needed (lower value makes it faster)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fill Screen Vertically with Randomly Colored Sine Waves</title>
+    <style>
+      /* Style for the animated sine wave */
+      .sine-wave {
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        overflow: hidden;
+      }
+
+      .sine-wave span {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Container to hold the animated sine waves -->
+    <div id="sine-container"></div>
+
+    <!-- Add the animation using JavaScript -->
+    <script>
+      // Function to generate a random color
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // Function to fill the screen vertically with continuously wavy sine waves
+      function fillScreenVertically(speed) {
+        const screenHeight = window.innerHeight;
+        const numWaves = Math.ceil(screenHeight / 10); // Each wave is 10px in height
+
+        for (let i = 0; i < numWaves; i++) {
+          const wave = document.createElement("div");
+          wave.classList.add("sine-wave");
+          wave.style.top = i * 10 + "px"; // Set the Y position
+
+          const waveColor = getRandomColor();
+          const waveSpan = document.createElement("span");
+          waveSpan.style.backgroundColor = waveColor;
+          wave.appendChild(waveSpan);
+
+          document.getElementById("sine-container").appendChild(wave);
+
+          animateWave(waveSpan, speed);
+        }
+      }
+
+      function animateWave(wave, speed) {
+        let phase = Math.random() * 360; // Random phase shift for variation
+
+        function updateWave() {
+          phase += 1; // Adjust the speed of the wave by changing this value
+          wave.style.transform = `translateX(${
+            Math.sin(phase * (Math.PI / 180)) * 50
+          }%)`; // Adjust the amplitude by changing the multiplier
+          requestAnimationFrame(updateWave);
+        }
+
+        updateWave();
+      }
+
+      // Call the function to fill the screen vertically with continuously wavy sine waves
+      fillScreenVertically(5); // Adjust the speed as needed (lower value makes it slower)
+    </script>
+  </body>
+</html>

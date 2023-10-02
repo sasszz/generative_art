@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fill Page with Different Colored Wavy Lines</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="wavy-lines"></canvas>
+    <script>
+      const canvas = document.getElementById("wavy-lines");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size to match the viewport
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Function to generate a random color
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // Function to draw a single wavy line with a random color
+      function drawWavyLine(yOffset) {
+        const lineWidth = 5;
+        const amplitude = 50;
+        const frequency = 0.02;
+
+        ctx.beginPath();
+        ctx.moveTo(0, yOffset);
+
+        for (let x = 0; x < canvas.width; x++) {
+          const y = yOffset + amplitude * Math.sin(frequency * x);
+          ctx.lineTo(x, y);
+        }
+
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = getRandomColor(); // Set a random color
+        ctx.stroke();
+      }
+
+      // Function to draw multiple closely spaced wavy lines with different colors
+      function drawWavyLines() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const lineHeight = 1; // Adjust this value to make lines closer together
+        let totalHeight = 0;
+
+        for (let y = 0; y < canvas.height + lineHeight; y += lineHeight) {
+          drawWavyLine(y);
+          totalHeight += lineHeight;
+        }
+
+        // Check if the lines have filled the page
+        if (totalHeight >= canvas.height) {
+          return; // Stop the animation
+        }
+
+        requestAnimationFrame(drawWavyLines);
+      }
+
+      // Start the animation
+      drawWavyLines();
+    </script>
+  </body>
+</html>
